@@ -7,6 +7,7 @@ from .forms import TodoForm
 from .models import Todo
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from .symptoms_list import *
 
 def home(request):
     return render(request, 'todo/home.html')
@@ -56,6 +57,47 @@ def createtodo(request):
             return redirect('currenttodos')
         except ValueError:
             return render(request, 'todo/createtodo.html', {'form':TodoForm(), 'error':'Bad data passed in. Try again.'})
+
+
+@login_required
+def predict_disease(request):
+        return render(request, 'todo/predict_disease.html', {'form':TodoForm(),'symptoms':symptoms})
+
+
+@login_required
+def predicted_results(request):
+    if request.method == 'GET':
+        sym1 =request.GET['sys1']
+        sym2 =request.GET['sys2']
+        sym3 =request.GET['sys3']
+        sym4 =request.GET['sys4']
+        sym5 =request.GET['sys5']
+        
+        syms = [sym1,sym2,sym3,sym4,sym5]
+        symptoms = []
+        for sym in syms:
+            if sym != 'none':
+                symptoms.append(sym.replace('_',' '))
+                
+#
+#
+#
+
+        disease = 'DISEASE TO BE PREDICT'
+        doctor = 'Dr. xyz'
+        excersize = 'suryanamskar'
+        return render(request, 'todo/predicted_result.html',{'form':TodoForm(),'symptoms':symptoms,'disease':disease,'doctor':doctor,'excersize':excersize})
+    else:
+        try:
+            form = TodoForm(request.POST)
+            newtodo = form.save(commit=False)
+            newtodo.user = request.user
+            newtodo.save()
+            return redirect('currenttodos')
+        except ValueError:
+            return render(request, 'todo/createtodo.html', {'form':TodoForm(), 'error':'Bad data passed in. Try again.'})
+
+
 
 @login_required
 def currenttodos(request):
