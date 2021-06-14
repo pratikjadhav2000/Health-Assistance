@@ -8,6 +8,8 @@ from .models import Todo
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from .symptoms_list import *
+from .CNN_TESTING import get_result
+
 
 def home(request):
     return render(request, 'todo/home.html')
@@ -59,6 +61,7 @@ def createtodo(request):
             return render(request, 'todo/createtodo.html', {'form':TodoForm(), 'error':'Bad data passed in. Try again.'})
 
 
+
 @login_required
 def predict_disease(request):
         return render(request, 'todo/predict_disease.html', {'form':TodoForm(),'symptoms':symptoms})
@@ -79,14 +82,11 @@ def predicted_results(request):
             if sym != 'none':
                 symptoms.append(sym.replace('_',' '))
                 
-#
-#
-#
-
-        disease = 'DISEASE TO BE PREDICT'
-        doctor = 'Dr. xyz'
-        excersize = 'suryanamskar'
-        return render(request, 'todo/predicted_result.html',{'form':TodoForm(),'symptoms':symptoms,'disease':disease,'doctor':doctor,'excersize':excersize})
+        symptoms_inserted = syms
+        result,acc,doctor_info,exercise_info,diet_info,medicine_info = get_result(symptoms_inserted)
+        print(result)
+ 
+        return render(request, 'todo/predicted_result.html',{'form':TodoForm(),'symptoms':symptoms,'disease':result,'doctor':doctor_info,'excersize':exercise_info, 'accuracy':acc,'diet':diet_info ,'medicine':medicine_info})
     else:
         try:
             form = TodoForm(request.POST)
@@ -96,7 +96,6 @@ def predicted_results(request):
             return redirect('currenttodos')
         except ValueError:
             return render(request, 'todo/createtodo.html', {'form':TodoForm(), 'error':'Bad data passed in. Try again.'})
-
 
 
 @login_required

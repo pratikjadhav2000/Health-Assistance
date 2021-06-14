@@ -16,16 +16,18 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="memo">Symptoms</label>
+                    <label for="memo"><b>Symptoms</b></label>
                     <textarea name="memo" class="form-control" id="memo" > {{ symptoms }} </textarea>
                 </div>
                 <div class="form-group">
-                    <label for="title">Disease name</label>
+                    <label for="title"><b>Predicted Disease <i>(Percentage of having this disease :  {{ accuracy }} %) </i></b></label>
                     <textarea name="title" class="form-control" id="title" > {{ disease }} </textarea>
                 </div>
 
-                <h6> Suggested doctor for predicted disease : {{ doctor }} </h6>
-                <h6> Suggested Excersize for predicted disease : {{ excersize }} </h6>
+                <h6> Suggested Medicine for predicted disease : <i><b>{{ medicine }}</b> </i></h6>
+                <h6> Suggested doctor for predicted disease :<b><i> {{ doctor }}</b> </i></h6>
+                <h6> Suggested Excersize for predicted disease :<b> <i> {{ excersize }} </b></i></h6>
+                <h6> Suggested Diet for predicted disease : <i><b>{{ diet }}</b> </i></h6>
                 <br>
                 <br>
 
